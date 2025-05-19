@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum PieceType
 {
@@ -16,6 +17,11 @@ public class ChessPiece : MonoBehaviour
     public int x, y;
     public PieceType pieceType;
     public bool isWhite;
+
+    private void Start()
+    {
+        gameObject.GetComponent<Image>().raycastTarget = false;
+    }
 
     public void Init(int x, int y, PieceType pieceType, bool isWhite)
     {

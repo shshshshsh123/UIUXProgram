@@ -14,6 +14,6 @@ public class TileButton : MonoBehaviour
         GetComponent<Button>().onClick.AddListener(() => onClick?.Invoke(x, y));
 
         // »ö
-        gameObject.GetComponent<Image>().color = (x + y) % 2 == 0 ? Color.white : Color.black;
+        gameObject.GetComponent<Image>().color = (x + y) % 2 == 1 ? Color.white : Color.black;
     }
 }
