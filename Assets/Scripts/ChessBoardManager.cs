@@ -28,9 +28,9 @@ public class ChessBoardManager : MonoBehaviour
 
         // 기물소환
         SpawnPiece(whitePieces[(int)PieceType.Pawn], 0, 1, PieceType.Pawn, true);
-        SpawnPiece(blackPieces[(int)PieceType.Rook], 4, 2, PieceType.Rook, false);
-        SpawnPiece(blackPieces[(int)PieceType.King], 3, 5, PieceType.King, false);
-        SpawnPiece(blackPieces[(int)PieceType.Queen], 5, 1, PieceType.Queen, false);
+        SpawnPiece(blackPieces[(int)PieceType.Rook], 4, 1, PieceType.Rook, false);
+        SpawnPiece(blackPieces[(int)PieceType.King], 3, 4, PieceType.King, false);
+        SpawnPiece(blackPieces[(int)PieceType.Queen], 5, 4, PieceType.Queen, false);
     }
 
     void OnTileClicked(int x, int y)
