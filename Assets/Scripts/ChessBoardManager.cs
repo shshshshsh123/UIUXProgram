@@ -76,6 +76,8 @@ public class ChessBoardManager : MonoBehaviour
             pieces[selectedPiece.x, selectedPiece.y] = null; // 기존 위치 비우기
             selectedPiece.MoveTo(x, y); // 기물 이동
             pieces[x, y] = selectedPiece; // 목표 위치에 기물 배치
+
+            ActionManager.whenPlayerMoved(); // 플레이어가 행동을 마쳤으니 액션 호출
         }
 
         // 선택 해제
