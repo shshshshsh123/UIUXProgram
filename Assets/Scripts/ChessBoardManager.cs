@@ -1,6 +1,8 @@
+using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class ChessBoardManager : MonoBehaviour
 {
@@ -9,7 +11,7 @@ public class ChessBoardManager : MonoBehaviour
     [Header("# 체스보드")]
     public GameObject tileButtonPrefab; // 프리팹으로 Button 만들기
     public Transform boardParent; // Grid Layout 붙은 오브젝트
-    private TileButton[,] tiles = new TileButton[8, 8];
+    public TileButton[,] tiles = new TileButton[8, 8];
 
     [Header("# 체스말")]
     public Sprite[] whitePieces;
@@ -38,7 +40,7 @@ public class ChessBoardManager : MonoBehaviour
         SpawnPiece(blackPieces[(int)PieceType.Rook], 4, 1, PieceType.Rook, false);
         SpawnPiece(blackPieces[(int)PieceType.King], 3, 4, PieceType.King, false);
         SpawnPiece(blackPieces[(int)PieceType.Queen], 5, 4, PieceType.Queen, false);
-        SpawnPiece(blackPieces[(int)PieceType.Bishop], 1, 2, PieceType.Bishop, false);   
+        SpawnPiece(blackPieces[(int)PieceType.Bishop], 1, 2, PieceType.Bishop, false);
     }
 
     public void OnTileClicked(int x, int y)
@@ -52,11 +54,23 @@ public class ChessBoardManager : MonoBehaviour
             {
                 selectedPiece = piece;
                 Debug.Log($"Selected piece: {piece.pieceType} at {x}, {y}");
+
+                // 이동 가능한 타일 계산
+                List<Vector2Int> moveableTiles = GetAvailableMoves(selectedPiece);
+                foreach(var move in moveableTiles)
+                {
+                    tiles[move.x, move.y].ShowCanMove(true); // 이동 가능한 타일 표시
+                }
             }
         }
         else
         {   // 기물 이동
             TryMoveChessPieceTo(x, y);
+            foreach (var tile in tiles)
+            {
+                tiles[tile.x, tile.y].ShowCanMove(false);
+            }
+            selectedPiece = null; // 선택 해제
         }
     }
 
@@ -66,7 +80,7 @@ public class ChessBoardManager : MonoBehaviour
         if (CalculateAbleMovePos(selectedPiece, x, y))
         {
             // 목표 위치에 있는 기물을 제거 (기물 잡기)
-            if( pieces[x, y] != null )
+            if (pieces[x, y] != null)
             {
                 Destroy(pieces[x, y].gameObject);
                 pieces[x, y] = null;
@@ -87,11 +101,11 @@ public class ChessBoardManager : MonoBehaviour
     {
         // 제자리 이동 방지
         if (piece.x == targetX && piece.y == targetY) return false;
-        
+
         // 이동할 위치에 아군 기물이 있다면 이동 불가
-        if( pieces[targetX, targetY] != null ) 
+        if (pieces[targetX, targetY] != null)
         {
-            if( pieces[targetX, targetY].isWhite == piece.isWhite ) return false;
+            if (pieces[targetX, targetY].isWhite == piece.isWhite) return false;
         }
 
         // 폰
@@ -100,10 +114,10 @@ public class ChessBoardManager : MonoBehaviour
             // 백색 기물인 경우 위로 한 칸 이동 가능
             if (piece.isWhite)
             {
-                if (targetX == piece.x && targetY == piece.y + 1) 
+                if (targetX == piece.x && targetY == piece.y + 1)
                 {
                     // 직진으로 이동할 경우, 다른 기물을 잡지 못한다
-                    if( pieces[targetX, targetY] == null ) return true;
+                    if (pieces[targetX, targetY] == null) return true;
                 }
             }
             else // 흑색 기물인 경우 아래로 한 칸 이동 가능
@@ -111,7 +125,7 @@ public class ChessBoardManager : MonoBehaviour
                 if (targetX == piece.x && targetY == piece.y - 1)
                 {
                     // 직진으로 이동할 경우, 다른 기물을 잡지 못한다
-                    if( pieces[targetX, targetY] == null ) return true;
+                    if (pieces[targetX, targetY] == null) return true;
                 }
             }
         }
@@ -123,19 +137,19 @@ public class ChessBoardManager : MonoBehaviour
             if (piece.x != targetX && piece.y != targetY) return false;
 
             // x축으로 이동하는 경우 x축 검사
-            if( piece.y == targetY )
+            if (piece.y == targetY)
             {
                 int startPoint = piece.x > targetX ? targetX : piece.x;
                 int endPoint = piece.x >= targetX ? piece.x : targetX;
-                for( int i = startPoint +1 ; i < endPoint ; i++ ) if( pieces[i, piece.y] != null ) return false;
+                for (int i = startPoint + 1; i < endPoint; i++) if (pieces[i, piece.y] != null) return false;
             }
-            
+
             // y축으로 이동하는 경우 y축 검사
-            if( piece.x == targetX )
+            if (piece.x == targetX)
             {
                 int startPoint = piece.y > targetY ? targetY : piece.y;
                 int endPoint = piece.y >= targetY ? piece.y : targetY;
-                for( int i = startPoint +1 ; i < endPoint ; i++ ) if( pieces[piece.x, i] != null ) return false;
+                for (int i = startPoint + 1; i < endPoint; i++) if (pieces[piece.x, i] != null) return false;
             }
 
             // 이동 불가능한 어느 조건에도 걸리지 않았다면 이동 성공
@@ -152,7 +166,7 @@ public class ChessBoardManager : MonoBehaviour
             // 수직 2칸 + 수평 1칸 또는 수평 2칸 + 수직 1칸인 경우 이동 가능
             if ((dx == 2 && dy == 1) || (dx == 1 && dy == 2)) return true;
         }
-        
+
         // 비숍
         if (piece.pieceType == PieceType.Bishop)
         {
@@ -188,19 +202,19 @@ public class ChessBoardManager : MonoBehaviour
             if (piece.x == targetX || piece.y == targetY)
             {
                 // x축으로 이동하는 경우 x축 검사
-                if( piece.y == targetY )
+                if (piece.y == targetY)
                 {
                     int startPoint = piece.x > targetX ? targetX : piece.x;
                     int endPoint = piece.x >= targetX ? piece.x : targetX;
-                    for( int i = startPoint +1 ; i < endPoint ; i++ ) if( pieces[i, piece.y] != null ) return false;
+                    for (int i = startPoint + 1; i < endPoint; i++) if (pieces[i, piece.y] != null) return false;
                 }
-                
+
                 // y축으로 이동하는 경우 y축 검사
-                if( piece.x == targetX )
+                if (piece.x == targetX)
                 {
                     int startPoint = piece.y > targetY ? targetY : piece.y;
                     int endPoint = piece.y >= targetY ? piece.y : targetY;
-                    for( int i = startPoint +1 ; i < endPoint ; i++ ) if( pieces[piece.x, i] != null ) return false;
+                    for (int i = startPoint + 1; i < endPoint; i++) if (pieces[piece.x, i] != null) return false;
                 }
 
                 // 이동 불가능한 어느 조건에도 걸리지 않았다면 이동 성공
@@ -256,7 +270,7 @@ public class ChessBoardManager : MonoBehaviour
     {
         // 새로운 기물 생성
         GameObject pieceObj = new GameObject($"Piece_{x}_{y}");
-        
+
         pieceObj.transform.SetParent(pieceParent);
         pieceObj.transform.localPosition = new Vector3(x * 100, y * 100, 0); // UI에 맞게 조정
 
@@ -269,5 +283,24 @@ public class ChessBoardManager : MonoBehaviour
         ChessPiece chessPiece = pieceObj.AddComponent<ChessPiece>();
         chessPiece.Init(x, y, pieceType, isWhite); // 체스 기물 초기화
         pieces[x, y] = chessPiece; // 기물 위치 저장
+    }
+
+    // 이동가능한 타일 계산
+    public List<Vector2Int> GetAvailableMoves(ChessPiece piece)
+    {
+        List<Vector2Int> moves = new List<Vector2Int>();
+
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
+            {
+                if (CalculateAbleMovePos(piece, x, y))
+                {
+                    moves.Add(new Vector2Int(x, y));
+                }
+            }
+        }
+
+        return moves;
     }
 }

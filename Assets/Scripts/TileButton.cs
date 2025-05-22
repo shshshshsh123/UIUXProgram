@@ -3,8 +3,14 @@ using UnityEngine.UI;
 
 public class TileButton : MonoBehaviour
 {
-    private int x, y;
-    private System.Action<int, int> onClick;
+    public int x, y;
+    public System.Action<int, int> onClick;
+    public GameObject canMoveImage;
+
+    private void Start()
+    {
+        canMoveImage.SetActive(false);
+    }
 
     public void Init(int x, int y, System.Action<int, int> clickCallback)
     {
@@ -15,5 +21,10 @@ public class TileButton : MonoBehaviour
 
         // 색
         gameObject.GetComponent<Image>().color = (x + y) % 2 == 1 ? Color.white : Color.black;
+    }
+
+    public void ShowCanMove(bool show)
+    {
+        canMoveImage.SetActive(show);
     }
 }
