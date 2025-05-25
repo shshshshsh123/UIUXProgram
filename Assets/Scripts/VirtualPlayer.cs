@@ -28,7 +28,8 @@ public class VirtualPlayer : MonoBehaviour
     {
         chessBoardManager = GameObject.FindAnyObjectByType<ChessBoardManager>();
         ActionManager.whenPlayerMoved += DoAction; // 액션 구독
-        PlanInit(); // 플랜 초기화
+
+        PlanInit(1); // 플랜 초기화
     }
 
     // 기물을 움직인다.
@@ -47,9 +48,48 @@ public class VirtualPlayer : MonoBehaviour
     }
 
     // 이곳에서 플랜 리스트 생성 (하드코딩)
-    protected virtual void PlanInit()
+    protected virtual void PlanInit(int stage)
     {
-        // planList.Add(new Plan(0,0,1,1)); (예시)
+        if( stage == 1 )
+        {
+            planList.Add(new Plan(7, 6, 6, 5));
+            planList.Add(new Plan(6, 5, 5, 4));
+            planList.Add(new Plan(6, 1, 6, 4));
+        }
+
+        if( stage == 2 )
+        {
+            planList.Add(new Plan(2, 7, 2, 6));
+            planList.Add(new Plan(1, 7, 0, 6));
+        }
+
+        if( stage == 3 )
+        {
+            planList.Add(new Plan(3, 2, 2, 1));
+            planList.Add(new Plan(2, 1, 1, 2));
+            planList.Add(new Plan(1, 2, 0, 3));
+        }
+
+        if( stage == 4 )
+        {
+            planList.Add(new Plan(6, 6, 6, 5));
+            planList.Add(new Plan(7, 6, 7, 7));
+            planList.Add(new Plan(1, 2, 1, 7));
+        }
+
+        if( stage == 5 )
+        {
+            planList.Add(new Plan(1, 5, 0, 4));
+            planList.Add(new Plan(0, 4, 0, 3));
+            planList.Add(new Plan(0, 3, 0, 2));
+        }
+
+        if( stage == 6 )
+        {
+            planList.Add(new Plan(4, 2, 1, 2));
+            planList.Add(new Plan(3, 1, 3, 0)); // 폰 프로모션
+            planList.Add(new Plan(3, 0, 3, 7)); // 퀸으로 프로모션한 폰이 이동
+        }
     }
 
     void OnDestroy()

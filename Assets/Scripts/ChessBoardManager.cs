@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 
 public class ChessBoardManager : MonoBehaviour
 {
@@ -35,12 +36,8 @@ public class ChessBoardManager : MonoBehaviour
             }
         }
 
-        // 기물소환
-        SpawnPiece(whitePieces[(int)PieceType.Pawn], 0, 1, PieceType.Pawn, true);
-        SpawnPiece(blackPieces[(int)PieceType.Rook], 4, 1, PieceType.Rook, false);
-        SpawnPiece(blackPieces[(int)PieceType.King], 3, 4, PieceType.King, false);
-        SpawnPiece(blackPieces[(int)PieceType.Queen], 5, 4, PieceType.Queen, false);
-        SpawnPiece(blackPieces[(int)PieceType.Bishop], 1, 2, PieceType.Bishop, false);
+        // 기물 소환
+        SetGame(6);
     }
 
     public void OnTileClicked(int x, int y)
@@ -304,5 +301,95 @@ public class ChessBoardManager : MonoBehaviour
         }
 
         return moves;
+    }
+
+    private void SetGame(int stage)
+    {
+        if( stage == 1 )
+        {
+            SpawnPiece(blackPieces[4], 0, 0, PieceType.Queen, false);
+            SpawnPiece(blackPieces[1], 6, 1, PieceType.Rook, false);
+            SpawnPiece(whitePieces[5], 4, 2, PieceType.King, true);
+            SpawnPiece(blackPieces[3], 3, 4, PieceType.Bishop, false);
+            SpawnPiece(whitePieces[0], 4, 4, PieceType.Pawn, true);
+            SpawnPiece(blackPieces[0], 7, 4, PieceType.Pawn, false);
+            SpawnPiece(blackPieces[0], 4, 5, PieceType.Pawn, false);
+            SpawnPiece(blackPieces[0], 5, 6, PieceType.Pawn, false);
+            SpawnPiece(blackPieces[5], 7, 6, PieceType.King, false);
+            SpawnPiece(whitePieces[1], 1, 7, PieceType.Rook, true);
+            SpawnPiece(whitePieces[1], 2, 7, PieceType.Rook, true);
+        }
+
+        if( stage == 2 )
+        {
+            SpawnPiece(whitePieces[4], 1, 2, PieceType.Queen, true);
+            SpawnPiece(blackPieces[5], 3, 3, PieceType.King, false);
+            SpawnPiece(blackPieces[0], 4, 3, PieceType.Pawn, false);
+            SpawnPiece(whitePieces[0], 0, 4, PieceType.Pawn, true);
+            SpawnPiece(blackPieces[2], 1, 5, PieceType.Knight, false);
+            SpawnPiece(blackPieces[4], 5, 5, PieceType.Queen, false);
+            SpawnPiece(whitePieces[0], 1, 6, PieceType.Pawn, true);
+            SpawnPiece(whitePieces[0], 7, 6, PieceType.Pawn, true);
+            SpawnPiece(whitePieces[5], 1, 7, PieceType.King, true);
+            SpawnPiece(whitePieces[1], 2, 7, PieceType.Rook, true);
+        }
+
+        if( stage == 3 )
+        {
+            SpawnPiece(blackPieces[5], 0, 0, PieceType.King, false);
+            SpawnPiece(whitePieces[1], 1, 1, PieceType.Rook, true);
+            SpawnPiece(whitePieces[1], 6, 1, PieceType.Rook, true);
+            SpawnPiece(blackPieces[0], 0, 2, PieceType.Pawn, false);
+            SpawnPiece(whitePieces[5], 5, 4, PieceType.King, true);
+            SpawnPiece(whitePieces[0], 1, 4, PieceType.Pawn, true);
+            SpawnPiece(blackPieces[1], 0, 5, PieceType.Rook, false);
+            SpawnPiece(whitePieces[0], 7, 5, PieceType.Pawn, true);
+            SpawnPiece(blackPieces[1], 4, 6, PieceType.Rook, false);
+            SpawnPiece(whitePieces[0], 6, 6, PieceType.Pawn, false);
+        }
+
+        if( stage == 4 )
+        {
+            SpawnPiece(blackPieces[0], 0, 2, PieceType.Pawn, false);
+            SpawnPiece(blackPieces[1], 1, 2, PieceType.Rook, false);
+            SpawnPiece(whitePieces[0], 6, 3, PieceType.Pawn, true);
+            SpawnPiece(whitePieces[5], 7, 3, PieceType.King, true);
+            SpawnPiece(whitePieces[0], 5, 4, PieceType.Pawn, true);
+            SpawnPiece(whitePieces[0], 6, 4, PieceType.Pawn, true);
+            SpawnPiece(whitePieces[1], 0, 5, PieceType.Rook, true);
+            SpawnPiece(blackPieces[0], 5, 6, PieceType.Pawn, false);
+            SpawnPiece(blackPieces[0], 6, 6, PieceType.Pawn, false);
+            SpawnPiece(blackPieces[5], 7, 6, PieceType.King, false);
+        }
+
+        if( stage == 5 )
+        {
+            SpawnPiece(whitePieces[0], 0, 1, PieceType.Pawn, true);
+            SpawnPiece(whitePieces[0], 5, 1, PieceType.Pawn, true);
+            SpawnPiece(whitePieces[5], 6, 1, PieceType.King, true);
+            SpawnPiece(whitePieces[0], 2, 3, PieceType.Pawn, true);
+            SpawnPiece(blackPieces[2], 6, 3, PieceType.Knight, false);
+            SpawnPiece(blackPieces[4], 7, 3, PieceType.Queen, false);
+            SpawnPiece(blackPieces[0], 2, 4, PieceType.Pawn, false);
+            SpawnPiece(whitePieces[0], 7, 4, PieceType.Pawn, true);
+            SpawnPiece(blackPieces[5], 1, 5, PieceType.King, false);
+            SpawnPiece(blackPieces[0], 3, 5, PieceType.Pawn, false);
+            SpawnPiece(whitePieces[4], 6, 5, PieceType.King, true);
+            SpawnPiece(blackPieces[0], 0, 6, PieceType.Pawn, false);
+            SpawnPiece(blackPieces[0], 1, 6, PieceType.Pawn, false);
+        }
+
+        if( stage == 6 )
+        {
+            SpawnPiece(whitePieces[0], 3, 1, PieceType.Pawn, true);
+            SpawnPiece(whitePieces[1], 4, 2, PieceType.Rook, true);
+            SpawnPiece(whitePieces[0], 4, 3, PieceType.Pawn, true);
+            SpawnPiece(whitePieces[0], 5, 3, PieceType.Pawn, true);
+            SpawnPiece(whitePieces[0], 7, 3, PieceType.Pawn, true);
+            SpawnPiece(blackPieces[5], 5, 4, PieceType.King, false);
+            SpawnPiece(whitePieces[0], 6, 4, PieceType.Pawn, true);
+            SpawnPiece(blackPieces[1], 1, 6, PieceType.Rook, false);
+            SpawnPiece(whitePieces[5], 7, 7, PieceType.King, true);
+        }
     }
 }
