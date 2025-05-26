@@ -73,7 +73,7 @@ public class ChessBoardManager : MonoBehaviour
                 List<Vector2Int> moveableTiles = GetAvailableMoves(selectedPiece);
                 foreach(var move in moveableTiles)
                 {
-                    tiles[move.x, move.y].ShowCanMove(true); // 이동 가능한 타일 표시
+                    UpdateAvailableMoves(); // 이동 가능한 타일 업데이트
                 }
             }
         }
@@ -83,6 +83,7 @@ public class ChessBoardManager : MonoBehaviour
             foreach (var tile in tiles)
             {
                 tiles[tile.x, tile.y].ShowCanMove(false);
+                tiles[tile.x, tile.y].ShowCanAttack(false); // 이동 가능한 타일 표시 해제
             }
             selectedPiece = null; // 선택 해제
         }
@@ -142,6 +143,24 @@ public class ChessBoardManager : MonoBehaviour
                 {
                     // 직진으로 이동할 경우, 다른 기물을 잡지 못한다
                     if (pieces[targetX, targetY] == null) return true;
+                }
+            }
+
+            // 흰색 대각선 공격
+            if (piece.isWhite)
+            {
+                if ((targetX == piece.x - 1 || targetX == piece.x + 1) && targetY == piece.y + 1)
+                {
+                    if (pieces[targetX, targetY] != null && !pieces[targetX, targetY].isWhite)
+                        return true;
+                }
+            }
+            else
+            {
+                if ((targetX == piece.x - 1 || targetX == piece.x + 1) && targetY == piece.y - 1)
+                {
+                    if (pieces[targetX, targetY] != null && pieces[targetX, targetY].isWhite)
+                        return true;
                 }
             }
         }
@@ -410,6 +429,32 @@ public class ChessBoardManager : MonoBehaviour
         }
     }
 
+    // 이동 가능한 타일 바닥표시하기
+    private void UpdateAvailableMoves()
+    {
+        if (selectedPiece == null) return;
+
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
+            {
+                if (CalculateAbleMovePos(selectedPiece, x, y))
+                {
+                    ChessPiece targetPiece = pieces[x, y];
+
+                    if (targetPiece == null)
+                    {
+                        tiles[x, y].ShowCanMove(true);
+                    }
+                    else if (targetPiece.isWhite != selectedPiece.isWhite)
+                    {
+                        tiles[x, y].ShowCanAttack(true);
+                    }
+                }
+            }
+        }
+    }
+
     public void OnStageClear()
     {
         GameManager.instance.OnStageClear(); // 게임매니저에 스테이지 클리어 알림
@@ -422,9 +467,31 @@ public class ChessBoardManager : MonoBehaviour
         foreach (var tile in tiles)
         {
             tile.ShowCanMove(false); // 모든 이동 가능한 타일 표시 해제
+            tile.ShowCanAttack(false); // 모든 공격 가능한 타일 표시 해제
         }
         selectedPiece = null; // 선택된 기물 해제
 
+        // 기존 체스보드 초기화 (삭제)
+        foreach (Transform child in boardParent)
+        {
+            Destroy(child.gameObject);
+        }
+        // 기존 체스말 초기화 (삭제)
+        foreach (Transform child in pieceParent)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
+    public void OnStageFailed()
+    {
+        GameManager.instance.OnGameFailed(); // 게임매니저에 게임 오버 알림
+        foreach (var tile in tiles)
+        {
+            tile.ShowCanMove(false); // 모든 이동 가능한 타일 표시 해제
+            tile.ShowCanAttack(false); // 모든 공격 가능한 타일 표시 해제
+        }
+        selectedPiece = null; // 선택된 기물 해제
         // 기존 체스보드 초기화 (삭제)
         foreach (Transform child in boardParent)
         {

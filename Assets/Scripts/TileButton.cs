@@ -6,10 +6,12 @@ public class TileButton : MonoBehaviour
     public int x, y;
     public System.Action<int, int> onClick;
     public GameObject canMoveImage;
+    public GameObject canAttackImage;
 
     private void Start()
     {
         canMoveImage.SetActive(false);
+        canAttackImage.SetActive(false);
     }
 
     public void Init(int x, int y, System.Action<int, int> clickCallback)
@@ -26,5 +28,10 @@ public class TileButton : MonoBehaviour
     public void ShowCanMove(bool show)
     {
         canMoveImage.SetActive(show);
+    }
+
+    public void ShowCanAttack(bool show)
+    {
+        canAttackImage.SetActive(show);
     }
 }
