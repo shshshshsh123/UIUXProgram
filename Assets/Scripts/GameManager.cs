@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    public int currentStage = 1; // ÇöÀç ½ºÅ×ÀÌÁö ¹øÈ£
+    private int currentStage = 1; // í˜„ì¬ ìŠ¤í…Œì´ì§€ ë²ˆí˜¸
 
     [Header("# UI")]
     public Button gameStartButton;
@@ -28,26 +28,24 @@ public class GameManager : MonoBehaviour
 
     void OnGameStartButton()
     {
-        currentStage = 1; // °ÔÀÓ ½ÃÀÛ ½Ã ½ºÅ×ÀÌÁö ÃÊ±âÈ­
-
-        ChessBoardManager.instance.SetChessBoard(1);
-        stageText.gameObject.SetActive(true); // ½ºÅ×ÀÌÁö ÅØ½ºÆ® È°¼ºÈ­
-        stageText.text = "Stage " + currentStage; // ½ºÅ×ÀÌÁö ÅØ½ºÆ® ¾÷µ¥ÀÌÆ®
-        gameStartButton.gameObject.SetActive(false); // °ÔÀÓ ½ÃÀÛ ¹öÆ° ¼û±è
+        ChessBoardManager.instance.SetChessBoard(currentStage);
+        stageText.gameObject.SetActive(true); // ìŠ¤í…Œì´ì§€ í…ìŠ¤íŠ¸ í™œì„±í™”
+        stageText.text = "Stage " + currentStage; // ìŠ¤í…Œì´ì§€ í…ìŠ¤íŠ¸ ì—…ë°ì´íŠ¸
+        gameStartButton.gameObject.SetActive(false); // ê²Œì„ ì‹œì‘ ë²„íŠ¼ ìˆ¨ê¹€
     }
 
     public void OnStageClear()
     {
         stageClearPopUp.SetActive(true);
-        currentStage++; // ½ºÅ×ÀÌÁö Áõ°¡
+        currentStage++; // ìŠ¤í…Œì´ì§€ ì¦ê°€
         stageText.gameObject.SetActive(false);
     }
 
     void OnNextStageButton()
     {
-        stageClearPopUp.SetActive(false); // ½ºÅ×ÀÌÁö Å¬¸®¾î ÆË¾÷ ¼û±è
-        ChessBoardManager.instance.SetChessBoard(currentStage); // ´ÙÀ½ ½ºÅ×ÀÌÁö ¼³Á¤
-        stageText.gameObject.SetActive(true); // ½ºÅ×ÀÌÁö ÅØ½ºÆ® È°¼ºÈ­
-        stageText.text = "Stage " + currentStage; // ½ºÅ×ÀÌÁö ÅØ½ºÆ® ¾÷µ¥ÀÌÆ®
+        stageClearPopUp.SetActive(false); // ìŠ¤í…Œì´ì§€ í´ë¦¬ì–´ íŒì—… ìˆ¨ê¹€
+        ChessBoardManager.instance.SetChessBoard(currentStage); // ë‹¤ìŒ ìŠ¤í…Œì´ì§€ ì„¤ì •
+        stageText.gameObject.SetActive(true); // ìŠ¤í…Œì´ì§€ í…ìŠ¤íŠ¸ í™œì„±í™”
+        stageText.text = "Stage " + currentStage; // ìŠ¤í…Œì´ì§€ í…ìŠ¤íŠ¸ ì—…ë°ì´íŠ¸
     }
 }

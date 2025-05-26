@@ -28,6 +28,8 @@ public class ChessBoardManager : MonoBehaviour
     [Header("# 이동로직")]
     public ChessPiece selectedPiece;
     public ChessPiece[,] pieces = new ChessPiece[8, 8]; // 체스말 위치 저장
+    private VirtualPlayer virtualPlayer;
+    private bool isPlayerWhite; // 플레이어가 백색인 경우 true
 
     public void SetChessBoard(int stage)
     {
@@ -41,8 +43,16 @@ public class ChessBoardManager : MonoBehaviour
                 tiles[x, y] = tile;
             }
         }
-        // 기물 소환
-        SetGame(stage);
+
+        virtualPlayer = GameObject.FindFirstObjectByType<VirtualPlayer>();
+
+        switch( stage ) // 현재 스테이지에 맞춰 플레이어의 진영 설정
+        {
+            case 1: case 4: case 5: isPlayerWhite = true; break; // 1, 4, 5 스테이지에 플레이어가 백색
+            default: isPlayerWhite = false; break; // 나머지 스테이지에 플레이어가 흑색
+        }
+        SetGame(stage); // 현재 스테이지에 맞춰 보드판 세팅
+        virtualPlayer.PlanInit(stage); // 현재 스테이지에 맞춰 AI 세팅
     }
 
     public void OnTileClicked(int x, int y)
@@ -52,7 +62,9 @@ public class ChessBoardManager : MonoBehaviour
         if (selectedPiece == null)
         {
             ChessPiece piece = pieces[x, y];
-            if (piece != null)
+
+            // 해당 타일에 기물이 있으면서, 해당 기물의 진영이 플레이어의 진영과 같아야 한다.
+            if (piece != null && isPlayerWhite == piece.isWhite )
             {
                 selectedPiece = piece;
                 Debug.Log($"Selected piece: {piece.pieceType} at {x}, {y}");
@@ -93,7 +105,7 @@ public class ChessBoardManager : MonoBehaviour
             selectedPiece.MoveTo(x, y); // 기물 이동
             pieces[x, y] = selectedPiece; // 목표 위치에 기물 배치
 
-            //ActionManager.whenPlayerMoved(); // 플레이어가 행동을 마쳤으니 액션 호출
+            ActionManager.whenPlayerMoved(); // 플레이어가 행동을 마쳤으니 액션 호출
         }
 
         // 선택 해제
@@ -345,7 +357,7 @@ public class ChessBoardManager : MonoBehaviour
             SpawnPiece(whitePieces[1], 1, 1, PieceType.Rook, true);
             SpawnPiece(whitePieces[1], 6, 1, PieceType.Rook, true);
             SpawnPiece(blackPieces[0], 0, 2, PieceType.Pawn, false);
-            SpawnPiece(whitePieces[5], 5, 4, PieceType.King, true);
+            SpawnPiece(whitePieces[5], 3, 2, PieceType.King, true);
             SpawnPiece(whitePieces[0], 1, 4, PieceType.Pawn, true);
             SpawnPiece(blackPieces[1], 0, 5, PieceType.Rook, false);
             SpawnPiece(whitePieces[0], 7, 5, PieceType.Pawn, true);
@@ -401,6 +413,12 @@ public class ChessBoardManager : MonoBehaviour
     public void OnStageClear()
     {
         GameManager.instance.OnStageClear(); // 게임매니저에 스테이지 클리어 알림
+
+        // 기물 초기화
+        for( int i = 0 ; i < 8 ; i++ )
+            for( int j = 0 ; j < 8 ; j++ )
+                pieces[i,j] = null;
+
         foreach (var tile in tiles)
         {
             tile.ShowCanMove(false); // 모든 이동 가능한 타일 표시 해제
