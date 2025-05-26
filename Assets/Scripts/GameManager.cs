@@ -12,17 +12,17 @@ public class GameManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    public int currentStage = 1; // ���� �������� ��ȣ
-    public bool showFeedback = false; // �ǵ�� ǥ�� ����
+    public int currentStage = 1; // 현재 스테이지 번호
+    public bool showFeedback = false; // 피드백 표시 여부
 
     [Header("# UI")]
     public Button gameStartButton;
     public TMP_Text stageText;
-    // Ŭ���� �˾�
+    // 클리어 팝업
     public GameObject stageClearPopUp;
     public TMP_Text stageClearText;
     public Button nextStageButton;
-    // ���� �˾�
+    // 실패 팝업
     public GameObject gameOverPopUp;
     public TMP_Text gameOverText;
     public Button retryButton;
@@ -46,8 +46,8 @@ public class GameManager : MonoBehaviour
     public void OnStageClear()
     {
         stageClearPopUp.SetActive(true);
-        stageClearText.text = "Stage " + currentStage + " Clear!"; // �������� Ŭ���� �ؽ�Ʈ ������Ʈ
-        currentStage++; // �������� ����
+        stageClearText.text = "Stage " + currentStage + " Clear!"; // 스테이지 클리어 텍스트 업데이트
+        currentStage++; // 스테이지 증가
         stageText.gameObject.SetActive(false);
     }
 
@@ -62,21 +62,21 @@ public class GameManager : MonoBehaviour
     public void OnGameFailed()
     {
         gameOverPopUp.SetActive(true);
-        gameOverText.text = "Stage " + currentStage + " Failed!"; // ���� ���� �ؽ�Ʈ ������Ʈ
-        stageText.gameObject.SetActive(false); // �������� �ؽ�Ʈ ����
+        gameOverText.text = "Stage " + currentStage + " Failed!"; // 게임 오버 텍스트 업데이트
+        stageText.gameObject.SetActive(false); // 스테이지 텍스트 숨김
 
-        if (showFeedback) feedbackText.gameObject.SetActive(true); // �ǵ�� �ؽ�Ʈ Ȱ��ȭ
-        else feedbackText.gameObject.SetActive(false); // �ǵ�� �ؽ�Ʈ ��Ȱ��ȭ
+        if (showFeedback) feedbackText.gameObject.SetActive(true); // 피드백 텍스트 활성화
+        else feedbackText.gameObject.SetActive(false); // 피드백 텍스트 비활성화
 
-        // �ǵ�� �ؽ�Ʈ ���� ����
-        feedbackText.text = "�ƾƾƾƾƾƾƾƾ�";
+        // 피드백 텍스트 내용 설정
+        feedbackText.text = "아아아아아아아아아아";
     }
 
     void OnRetryButton()
     {
-        gameOverPopUp.SetActive(false); // ���� ���� �˾� ����
-        ChessBoardManager.instance.SetChessBoard(currentStage); // ���� �������� �缳��
-        stageText.gameObject.SetActive(true); // �������� �ؽ�Ʈ Ȱ��ȭ
-        stageText.text = "Stage " + currentStage; // �������� �ؽ�Ʈ ������Ʈ
+        gameOverPopUp.SetActive(false); // 게임 오버 팝업 숨김
+        ChessBoardManager.instance.SetChessBoard(currentStage); // 현재 스테이지 재설정
+        stageText.gameObject.SetActive(true); // 스테이지 텍스트 활성화
+        stageText.text = "Stage " + currentStage; // 스테이지 텍스트 업데이트
     }
 }
