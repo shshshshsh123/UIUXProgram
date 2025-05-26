@@ -31,17 +31,6 @@ public class ChessBoardManager : MonoBehaviour
 
     public void SetChessBoard(int stage)
     {
-        // 기존 체스보드 초기화 (삭제)
-        foreach (Transform child in boardParent)
-        {
-            Destroy(child.gameObject);
-        }
-        // 기존 체스말 초기화 (삭제)
-        foreach (Transform child in pieceParent)
-        {
-            Destroy(child.gameObject);
-        }
-
         for (int y = 7; y >= 0; y--)
         {
             for (int x = 0; x < 8; x++)
@@ -417,5 +406,16 @@ public class ChessBoardManager : MonoBehaviour
             tile.ShowCanMove(false); // 모든 이동 가능한 타일 표시 해제
         }
         selectedPiece = null; // 선택된 기물 해제
+
+        // 기존 체스보드 초기화 (삭제)
+        foreach (Transform child in boardParent)
+        {
+            Destroy(child.gameObject);
+        }
+        // 기존 체스말 초기화 (삭제)
+        foreach (Transform child in pieceParent)
+        {
+            Destroy(child.gameObject);
+        }
     }
 }
