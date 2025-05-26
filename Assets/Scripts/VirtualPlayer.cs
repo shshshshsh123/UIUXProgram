@@ -48,7 +48,7 @@ public class VirtualPlayer : MonoBehaviour
     }
 
     // 이곳에서 플랜 리스트 생성 (하드코딩)
-    protected virtual void PlanInit(int stage)
+    public void PlanInit(int stage)
     {
         if( stage == 1 )
         {

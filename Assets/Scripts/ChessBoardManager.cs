@@ -9,6 +9,12 @@ public class ChessBoardManager : MonoBehaviour
 {
     public static ChessBoardManager instance;
 
+    private void Awake()
+    {
+        if (instance == null) instance = this;
+        else Destroy(gameObject);
+    }
+
     [Header("# 체스보드")]
     public GameObject tileButtonPrefab; // 프리팹으로 Button 만들기
     public Transform boardParent; // Grid Layout 붙은 오브젝트
@@ -23,8 +29,19 @@ public class ChessBoardManager : MonoBehaviour
     public ChessPiece selectedPiece;
     public ChessPiece[,] pieces = new ChessPiece[8, 8]; // 체스말 위치 저장
 
-    void Start()
+    public void SetChessBoard(int stage)
     {
+        // 기존 체스보드 초기화 (삭제)
+        foreach (Transform child in boardParent)
+        {
+            Destroy(child.gameObject);
+        }
+        // 기존 체스말 초기화 (삭제)
+        foreach (Transform child in pieceParent)
+        {
+            Destroy(child.gameObject);
+        }
+
         for (int y = 7; y >= 0; y--)
         {
             for (int x = 0; x < 8; x++)
@@ -35,9 +52,8 @@ public class ChessBoardManager : MonoBehaviour
                 tiles[x, y] = tile;
             }
         }
-
         // 기물 소환
-        SetGame(6);
+        SetGame(stage);
     }
 
     public void OnTileClicked(int x, int y)
@@ -88,7 +104,7 @@ public class ChessBoardManager : MonoBehaviour
             selectedPiece.MoveTo(x, y); // 기물 이동
             pieces[x, y] = selectedPiece; // 목표 위치에 기물 배치
 
-            ActionManager.whenPlayerMoved(); // 플레이어가 행동을 마쳤으니 액션 호출
+            //ActionManager.whenPlayerMoved(); // 플레이어가 행동을 마쳤으니 액션 호출
         }
 
         // 선택 해제
@@ -391,5 +407,15 @@ public class ChessBoardManager : MonoBehaviour
             SpawnPiece(blackPieces[1], 1, 6, PieceType.Rook, false);
             SpawnPiece(whitePieces[5], 7, 7, PieceType.King, true);
         }
+    }
+
+    public void OnStageClear()
+    {
+        GameManager.instance.OnStageClear(); // 게임매니저에 스테이지 클리어 알림
+        foreach (var tile in tiles)
+        {
+            tile.ShowCanMove(false); // 모든 이동 가능한 타일 표시 해제
+        }
+        selectedPiece = null; // 선택된 기물 해제
     }
 }
