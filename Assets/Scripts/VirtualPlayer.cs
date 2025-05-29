@@ -120,6 +120,7 @@ public class VirtualPlayer : MonoBehaviour
     public void PlanInit(int stage)
     {
         planList.Clear();
+        userMoveList.Clear();
         userMoveIndex = 0; // 유저 이동 인덱스 초기화
 
         if ( stage == 1 )
@@ -138,6 +139,10 @@ public class VirtualPlayer : MonoBehaviour
         {
             planList.Add(new Plan(2, 7, 2, 6));
             planList.Add(new Plan(1, 7, 0, 6));
+
+            userMoveList.Add(new UserMove(5, 5, 4, 4));
+            userMoveList.Add(new UserMove(1, 5, 3, 6));
+            userMoveList.Add(new UserMove(4, 4, 0, 4));
         }
 
         if( stage == 3 )
@@ -145,6 +150,11 @@ public class VirtualPlayer : MonoBehaviour
             planList.Add(new Plan(3, 2, 2, 1));
             planList.Add(new Plan(2, 1, 1, 2));
             planList.Add(new Plan(1, 2, 0, 3));
+
+            userMoveList.Add(new UserMove(0, 5, 3, 5));
+            userMoveList.Add(new UserMove(4, 6, 2, 6));
+            userMoveList.Add(new UserMove(3, 5, 3, 2));
+            userMoveList.Add(new UserMove(2, 6, 0, 6));
         }
 
         if( stage == 4 )
@@ -152,6 +162,11 @@ public class VirtualPlayer : MonoBehaviour
             planList.Add(new Plan(6, 6, 6, 5));
             planList.Add(new Plan(7, 6, 7, 7));
             planList.Add(new Plan(1, 2, 1, 7));
+
+            userMoveList.Add(new UserMove(6, 4, 6, 5));
+            userMoveList.Add(new UserMove(5, 4, 6, 5));
+            userMoveList.Add(new UserMove(0, 5, 0, 7));
+            userMoveList.Add(new UserMove(0, 7, 1, 7));
         }
 
         if( stage == 5 )
@@ -159,6 +174,11 @@ public class VirtualPlayer : MonoBehaviour
             planList.Add(new Plan(1, 5, 0, 4));
             planList.Add(new Plan(0, 4, 0, 3));
             planList.Add(new Plan(0, 3, 0, 2));
+
+            userMoveList.Add(new UserMove(6, 5, 3, 5));
+            userMoveList.Add(new UserMove(3, 5, 2, 4));
+            userMoveList.Add(new UserMove(2, 4, 1, 4));
+            userMoveList.Add(new UserMove(1, 4, 1, 2));
         }
 
         if( stage == 6 )
@@ -166,6 +186,11 @@ public class VirtualPlayer : MonoBehaviour
             planList.Add(new Plan(4, 2, 1, 2));
             planList.Add(new Plan(3, 1, 3, 0)); // 폰 프로모션
             planList.Add(new Plan(3, 0, 3, 7)); // 퀸으로 프로모션한 폰이 이동
+        
+            userMoveList.Add(new UserMove(5, 4, 6, 5));
+            userMoveList.Add(new UserMove(1, 6, 1, 2));
+            userMoveList.Add(new UserMove(1, 2, 1, 7));
+            userMoveList.Add(new UserMove(1, 7, 3, 7));
         }
     }
 
