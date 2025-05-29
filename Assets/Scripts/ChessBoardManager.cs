@@ -79,6 +79,7 @@ public class ChessBoardManager : MonoBehaviour
         }
         else
         {   // 기물 이동
+            Vector2Int startPos = new Vector2Int(selectedPiece.x, selectedPiece.y);
             TryMoveChessPieceTo(x, y);
             foreach (var tile in tiles)
             {
@@ -86,6 +87,14 @@ public class ChessBoardManager : MonoBehaviour
                 tiles[tile.x, tile.y].ShowCanAttack(false); // 이동 가능한 타일 표시 해제
             }
             selectedPiece = null; // 선택 해제
+            Vector2Int endPos = new Vector2Int(x, y);
+
+            bool isCorrectMove = VirtualPlayer.instance.CheckUserMove(startPos, endPos); // 유저의 움직임 확인
+
+            if (!isCorrectMove)
+            {
+                OnStageFailed(); // 유저의 움직임이 잘못되었을 경우 게임 오버
+            }
         }
     }
 

@@ -18,13 +18,40 @@ public class Plan
     }
 }
 
+// 유저가 움직여야할 기물의 위치와 이동할 위치를 저장하는 클래스
+public class UserMove
+{
+    public int originX, originY; // 움직여야할 기물의 위치
+    public int targetX, targetY; // 해당 기물을 옮길 위치
+
+    public UserMove(int ox, int oy, int tx, int ty)
+    {
+        originX = ox;
+        originY = oy;
+        targetX = tx;
+        targetY = ty;
+    }
+}
+
 // AI 스크립트
 // 플레이어가 턴을 종료하면 정해진 대로 기물을 움직인다.
 public class VirtualPlayer : MonoBehaviour
 {
+    public static VirtualPlayer instance; // 싱글톤 인스턴스
+
+    private void Awake()
+    {
+        if (instance == null) instance = this;
+        else Destroy(gameObject);
+    }
+
     // 플랜 리스트
     private List<Plan> planList = new List<Plan>();
+    private List<UserMove> userMoveList = new List<UserMove>();
     private ChessBoardManager chessBoardManager; // 체스 보드 매니저
+
+    private int userMoveIndex = 0; // 유저의 움직임 횟수
+
     private void Start()
     {
         chessBoardManager = GameObject.FindAnyObjectByType<ChessBoardManager>();
@@ -34,6 +61,13 @@ public class VirtualPlayer : MonoBehaviour
     // 기물을 움직인다.
     public void DoAction()
     {
+        if (planList.Count == 0)
+        {
+            // plan이 비어있으면 클리어했다는 뜻
+            Debug.Log("플랜이 비어있음. 게임 클리어!");
+            ChessBoardManager.instance.OnStageClear();
+        }
+
         ChessPiece targetPiece; // 움직일 기물
         Plan curruntPlan; // 현재 턴의 플랜
 
@@ -58,16 +92,46 @@ public class VirtualPlayer : MonoBehaviour
         planList.RemoveAt(0); // 이미 뽑힌 플랜은 폐기
     }
 
+    public bool CheckUserMove(Vector2Int start, Vector2Int end)
+    {
+        if (userMoveIndex >= userMoveList.Count)
+        {
+            Debug.Log("모든 이동 완료!");
+            return false;
+        }
+
+        UserMove correctMove = userMoveList[userMoveIndex];
+
+        if (correctMove.originX == start.x && correctMove.originY == start.y
+            && correctMove.targetX == end.x && correctMove.targetY == end.y)
+        {
+            Debug.Log("정답 이동: " + start + " -> " + end);
+            userMoveIndex++;
+            return true;
+        }
+        else
+        {
+            Debug.Log("오답! 정답은: " + start + " -> " + end);
+            return false;
+        }
+    }
+
     // 이곳에서 플랜 리스트 생성 (하드코딩)
     public void PlanInit(int stage)
     {
         planList.Clear();
+        userMoveIndex = 0; // 유저 이동 인덱스 초기화
 
-        if( stage == 1 )
+        if ( stage == 1 )
         {
             planList.Add(new Plan(7, 6, 6, 5));
             planList.Add(new Plan(6, 5, 5, 4));
             planList.Add(new Plan(6, 1, 6, 4));
+
+            userMoveList.Add(new UserMove(2, 7, 7, 7));
+            userMoveList.Add(new UserMove(1, 7, 6, 7));
+            userMoveList.Add(new UserMove(7, 7, 7, 4));
+            userMoveList.Add(new UserMove(6, 7, 6, 4));
         }
 
         if( stage == 2 )
