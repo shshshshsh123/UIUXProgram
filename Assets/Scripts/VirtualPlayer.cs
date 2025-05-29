@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 // AI의 게임 계획
 // 단순히 [x1,y1]에 있는 기물을 [x2,y2]로 움직이는 구조
@@ -28,8 +29,6 @@ public class VirtualPlayer : MonoBehaviour
     {
         chessBoardManager = GameObject.FindAnyObjectByType<ChessBoardManager>();
         ActionManager.whenPlayerMoved += DoAction; // 액션 구독
-
-        PlanInit(1); // 플랜 초기화
     }
 
     // 기물을 움직인다.
@@ -40,16 +39,30 @@ public class VirtualPlayer : MonoBehaviour
 
         // 플랜 리스트에서 첫번째 플랜을 뽑는다.
         curruntPlan = planList[0];
-        planList.RemoveAt(0); // 이미 뽑힌 플랜은 폐기
 
         // 플랜에 있는 대로 기물을 움직인다
         targetPiece = chessBoardManager.pieces[curruntPlan.originX, curruntPlan.originY];
+        if( targetPiece == null )
+        {
+            Debug.Log("null: " + curruntPlan.originX + "," + curruntPlan.originY);
+        }
         targetPiece.MoveTo(curruntPlan.targetX, curruntPlan.targetY);
+
+        // 목표 지점에 이미 말이 있는 경우 잡는다.
+        ChessPiece enemyPiece = chessBoardManager.pieces[curruntPlan.targetX, curruntPlan.targetY];
+        if( enemyPiece != null ) chessBoardManager.pieces[enemyPiece.x, enemyPiece.y] = null;
+
+        chessBoardManager.pieces[curruntPlan.originX, curruntPlan.originY] = null; // 기존 위치에 있던 기물 제거
+        chessBoardManager.pieces[curruntPlan.targetX, curruntPlan.targetY] = targetPiece; // 새로운 위치로 기물 이동        
+
+        planList.RemoveAt(0); // 이미 뽑힌 플랜은 폐기
     }
 
     // 이곳에서 플랜 리스트 생성 (하드코딩)
     public void PlanInit(int stage)
     {
+        planList.Clear();
+
         if( stage == 1 )
         {
             planList.Add(new Plan(7, 6, 6, 5));

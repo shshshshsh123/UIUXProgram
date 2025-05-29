@@ -12,17 +12,17 @@ public class GameManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    public int currentStage = 1; // ÇöÀç ½ºÅ×ÀÌÁö ¹øÈ£
-    public bool showFeedback = false; // ÇÇµå¹é Ç¥½Ã ¿©ºÎ
+    public int currentStage = 1; // í˜„ì¬ ìŠ¤í…Œì´ì§€ ë²ˆí˜¸
+    public bool showFeedback = false; // í”¼ë“œë°± í‘œì‹œ ì—¬ë¶€
 
     [Header("# UI")]
     public Button gameStartButton;
     public TMP_Text stageText;
-    // Å¬¸®¾î ÆË¾÷
+    // í´ë¦¬ì–´ íŒì—…
     public GameObject stageClearPopUp;
     public TMP_Text stageClearText;
     public Button nextStageButton;
-    // ½ÇÆĞ ÆË¾÷
+    // ì‹¤íŒ¨ íŒì—…
     public GameObject gameOverPopUp;
     public TMP_Text gameOverText;
     public Button retryButton;
@@ -37,48 +37,46 @@ public class GameManager : MonoBehaviour
 
     void OnGameStartButton()
     {
-        currentStage = 1; // °ÔÀÓ ½ÃÀÛ ½Ã ½ºÅ×ÀÌÁö ÃÊ±âÈ­
-
-        ChessBoardManager.instance.SetChessBoard(1);
-        stageText.gameObject.SetActive(true); // ½ºÅ×ÀÌÁö ÅØ½ºÆ® È°¼ºÈ­
-        stageText.text = "Stage " + currentStage; // ½ºÅ×ÀÌÁö ÅØ½ºÆ® ¾÷µ¥ÀÌÆ®
-        gameStartButton.gameObject.SetActive(false); // °ÔÀÓ ½ÃÀÛ ¹öÆ° ¼û±è
+        ChessBoardManager.instance.SetChessBoard(currentStage);
+        stageText.gameObject.SetActive(true); // ìŠ¤í…Œì´ì§€ í…ìŠ¤íŠ¸ í™œì„±í™”
+        stageText.text = "Stage " + currentStage; // ìŠ¤í…Œì´ì§€ í…ìŠ¤íŠ¸ ì—…ë°ì´íŠ¸
+        gameStartButton.gameObject.SetActive(false); // ê²Œì„ ì‹œì‘ ë²„íŠ¼ ìˆ¨ê¹€
     }
 
     public void OnStageClear()
     {
         stageClearPopUp.SetActive(true);
-        stageClearText.text = "Stage " + currentStage + " Clear!"; // ½ºÅ×ÀÌÁö Å¬¸®¾î ÅØ½ºÆ® ¾÷µ¥ÀÌÆ®
-        currentStage++; // ½ºÅ×ÀÌÁö Áõ°¡
+        stageClearText.text = "Stage " + currentStage + " Clear!"; // ìŠ¤í…Œì´ì§€ í´ë¦¬ì–´ í…ìŠ¤íŠ¸ ì—…ë°ì´íŠ¸
+        currentStage++; // ìŠ¤í…Œì´ì§€ ì¦ê°€
         stageText.gameObject.SetActive(false);
     }
 
     void OnNextStageButton()
     {
-        stageClearPopUp.SetActive(false); // ½ºÅ×ÀÌÁö Å¬¸®¾î ÆË¾÷ ¼û±è
-        ChessBoardManager.instance.SetChessBoard(currentStage); // ´ÙÀ½ ½ºÅ×ÀÌÁö ¼³Á¤
-        stageText.gameObject.SetActive(true); // ½ºÅ×ÀÌÁö ÅØ½ºÆ® È°¼ºÈ­
-        stageText.text = "Stage " + currentStage; // ½ºÅ×ÀÌÁö ÅØ½ºÆ® ¾÷µ¥ÀÌÆ®
+        stageClearPopUp.SetActive(false); // ìŠ¤í…Œì´ì§€ í´ë¦¬ì–´ íŒì—… ìˆ¨ê¹€
+        ChessBoardManager.instance.SetChessBoard(currentStage); // ë‹¤ìŒ ìŠ¤í…Œì´ì§€ ì„¤ì •
+        stageText.gameObject.SetActive(true); // ìŠ¤í…Œì´ì§€ í…ìŠ¤íŠ¸ í™œì„±í™”
+        stageText.text = "Stage " + currentStage; // ìŠ¤í…Œì´ì§€ í…ìŠ¤íŠ¸ ì—…ë°ì´íŠ¸
     }
 
     public void OnGameFailed()
     {
         gameOverPopUp.SetActive(true);
-        gameOverText.text = "Stage " + currentStage + " Failed!"; // °ÔÀÓ ¿À¹ö ÅØ½ºÆ® ¾÷µ¥ÀÌÆ®
-        stageText.gameObject.SetActive(false); // ½ºÅ×ÀÌÁö ÅØ½ºÆ® ¼û±è
+        gameOverText.text = "Stage " + currentStage + " Failed!"; // ê²Œì„ ì˜¤ë²„ í…ìŠ¤íŠ¸ ì—…ë°ì´íŠ¸
+        stageText.gameObject.SetActive(false); // ìŠ¤í…Œì´ì§€ í…ìŠ¤íŠ¸ ìˆ¨ê¹€
 
-        if (showFeedback) feedbackText.gameObject.SetActive(true); // ÇÇµå¹é ÅØ½ºÆ® È°¼ºÈ­
-        else feedbackText.gameObject.SetActive(false); // ÇÇµå¹é ÅØ½ºÆ® ºñÈ°¼ºÈ­
+        if (showFeedback) feedbackText.gameObject.SetActive(true); // í”¼ë“œë°± í…ìŠ¤íŠ¸ í™œì„±í™”
+        else feedbackText.gameObject.SetActive(false); // í”¼ë“œë°± í…ìŠ¤íŠ¸ ë¹„í™œì„±í™”
 
-        // ÇÇµå¹é ÅØ½ºÆ® ³»¿ë ¼³Á¤
-        feedbackText.text = "¾Æ¾Æ¾Æ¾Æ¾Æ¾Æ¾Æ¾Æ¾Æ";
+        // í”¼ë“œë°± í…ìŠ¤íŠ¸ ë‚´ìš© ì„¤ì •
+        feedbackText.text = "ì•„ì•„ì•„ì•„ì•„ì•„ì•„ì•„ì•„ì•„";
     }
 
     void OnRetryButton()
     {
-        gameOverPopUp.SetActive(false); // °ÔÀÓ ¿À¹ö ÆË¾÷ ¼û±è
-        ChessBoardManager.instance.SetChessBoard(currentStage); // ÇöÀç ½ºÅ×ÀÌÁö Àç¼³Á¤
-        stageText.gameObject.SetActive(true); // ½ºÅ×ÀÌÁö ÅØ½ºÆ® È°¼ºÈ­
-        stageText.text = "Stage " + currentStage; // ½ºÅ×ÀÌÁö ÅØ½ºÆ® ¾÷µ¥ÀÌÆ®
+        gameOverPopUp.SetActive(false); // ê²Œì„ ì˜¤ë²„ íŒì—… ìˆ¨ê¹€
+        ChessBoardManager.instance.SetChessBoard(currentStage); // í˜„ì¬ ìŠ¤í…Œì´ì§€ ì¬ì„¤ì •
+        stageText.gameObject.SetActive(true); // ìŠ¤í…Œì´ì§€ í…ìŠ¤íŠ¸ í™œì„±í™”
+        stageText.text = "Stage " + currentStage; // ìŠ¤í…Œì´ì§€ í…ìŠ¤íŠ¸ ì—…ë°ì´íŠ¸
     }
 }
