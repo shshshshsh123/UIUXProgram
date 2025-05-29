@@ -100,6 +100,12 @@ public class ChessBoardManager : MonoBehaviour
 
     void TryMoveChessPieceTo(int x, int y)
     {
+        if (x == selectedPiece.x && y == selectedPiece.y)
+        {
+            Debug.Log("이동 취소!");
+            selectedPiece = null; // 선택 해제
+            return; // 같은 위치로 이동하려는 경우 이동 취소
+        }
         // 먼저 이동 가능한 위치인지 계산 후 이동 가능하다면 이동시킨다.
         if (CalculateAbleMovePos(selectedPiece, x, y))
         {

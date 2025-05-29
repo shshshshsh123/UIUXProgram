@@ -87,7 +87,6 @@ public class VirtualPlayer : MonoBehaviour
         ChessBoardManager.instance.pieces[curruntPlan.originX, curruntPlan.originY] = null; // 기존 위치에 있던 기물 제거
         ChessBoardManager.instance.pieces[curruntPlan.targetX, curruntPlan.targetY] = targetPiece; // 새로운 위치로 기물 이동        
 
-        planList.RemoveAt(0); // 이미 뽑힌 플랜은 폐기
     }
 
     public bool CheckUserMove(Vector2Int start, Vector2Int end)
@@ -98,7 +97,15 @@ public class VirtualPlayer : MonoBehaviour
             return false;
         }
 
+        if (start.x == end.x && start.y == end.y)
+        {
+            Debug.Log("이동하지 않음: " + start + " -> " + end);
+            return true; // 이동하지 않으면 취소
+        }
+
         UserMove correctMove = userMoveList[userMoveIndex];
+
+        planList.RemoveAt(0); // 이미 뽑힌 플랜은 폐기
 
         if (correctMove.originX == start.x && correctMove.originY == start.y
             && correctMove.targetX == end.x && correctMove.targetY == end.y)
@@ -181,7 +188,6 @@ public class VirtualPlayer : MonoBehaviour
 
         if( stage == 6 )
         {
-<<<<<<< HEAD
             planList.Add(new Plan(6, 6, 6, 7));
             planList.Add(new Plan(6, 7, 7, 7));
             planList.Add(new Plan(7, 7, 6, 7));
@@ -190,16 +196,6 @@ public class VirtualPlayer : MonoBehaviour
             userMoveList.Add(new UserMove(7, 2, 7, 7));
             userMoveList.Add(new UserMove(3, 1, 7, 5));
             userMoveList.Add(new UserMove(7, 5, 6, 5));
-=======
-            planList.Add(new Plan(4, 2, 1, 2));
-            planList.Add(new Plan(3, 1, 3, 0)); // 폰 프로모션
-            planList.Add(new Plan(3, 0, 3, 7)); // 퀸으로 프로모션한 폰이 이동
-        
-            userMoveList.Add(new UserMove(5, 4, 6, 5));
-            userMoveList.Add(new UserMove(1, 6, 1, 2));
-            userMoveList.Add(new UserMove(1, 2, 1, 7));
-            userMoveList.Add(new UserMove(1, 7, 3, 7));
->>>>>>> 3733b11f3fd7b039156c631e043c57c95b7b07c2
         }
     }
 
