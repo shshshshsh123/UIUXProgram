@@ -48,7 +48,7 @@ public class ChessBoardManager : MonoBehaviour
 
         switch( stage ) // 현재 스테이지에 맞춰 플레이어의 진영 설정
         {
-            case 1: case 4: case 5: isPlayerWhite = true; break; // 1, 4, 5 스테이지에 플레이어가 백색
+            case 1: case 4: case 5: case 6: isPlayerWhite = true; break; // 1, 4, 5, 6 스테이지에 플레이어가 백색
             default: isPlayerWhite = false; break; // 나머지 스테이지에 플레이어가 흑색
         }
         SetGame(stage); // 현재 스테이지에 맞춰 보드판 세팅
@@ -426,15 +426,26 @@ public class ChessBoardManager : MonoBehaviour
 
         if( stage == 6 )
         {
-            SpawnPiece(whitePieces[0], 3, 1, PieceType.Pawn, true);
-            SpawnPiece(whitePieces[1], 4, 2, PieceType.Rook, true);
-            SpawnPiece(whitePieces[0], 4, 3, PieceType.Pawn, true);
-            SpawnPiece(whitePieces[0], 5, 3, PieceType.Pawn, true);
-            SpawnPiece(whitePieces[0], 7, 3, PieceType.Pawn, true);
-            SpawnPiece(blackPieces[5], 5, 4, PieceType.King, false);
-            SpawnPiece(whitePieces[0], 6, 4, PieceType.Pawn, true);
-            SpawnPiece(blackPieces[1], 1, 6, PieceType.Rook, false);
-            SpawnPiece(whitePieces[5], 7, 7, PieceType.King, true);
+            // 흰색 기물 (isWhite = true)
+            SpawnPiece(whitePieces[5], 7, 1, PieceType.King, true);    // ♔ h2
+            SpawnPiece(whitePieces[4], 3, 1, PieceType.Queen, true);   // ♕ d2
+            SpawnPiece(whitePieces[1], 5, 0, PieceType.Rook, true);    // ♖ f1
+            SpawnPiece(whitePieces[1], 7, 2, PieceType.Rook, true);    // ♖ h3
+            SpawnPiece(whitePieces[2], 5, 3, PieceType.Knight, true);  // ♘ f4
+            SpawnPiece(whitePieces[0], 1, 1, PieceType.Pawn, true);    // ♙ b2
+            SpawnPiece(whitePieces[0], 6, 2, PieceType.Pawn, true);    // ♙ g3
+
+            // 검정 기물 (isWhite = false)
+            SpawnPiece(blackPieces[5], 6, 6, PieceType.King, false);   // ♚ g7
+            SpawnPiece(blackPieces[4], 1, 5, PieceType.Queen, false);  // ♛ b6
+            SpawnPiece(blackPieces[1], 4, 7, PieceType.Rook, false);   // ♜ e8
+            SpawnPiece(blackPieces[1], 1, 3, PieceType.Rook, false);   // ♜ b4
+            SpawnPiece(blackPieces[2], 4, 4, PieceType.Knight, false); // ♞ e5
+            SpawnPiece(blackPieces[0], 5, 6, PieceType.Pawn, false);   // ♟ f7
+            SpawnPiece(blackPieces[0], 6, 5, PieceType.Pawn, false);   // ♟ g6
+            SpawnPiece(blackPieces[0], 3, 5, PieceType.Pawn, false);   // ♟ d6
+            SpawnPiece(blackPieces[0], 0, 5, PieceType.Pawn, false);   // ♟ a6
+            SpawnPiece(blackPieces[0], 0, 3, PieceType.Pawn, false);   // ♟ a4
         }
     }
 

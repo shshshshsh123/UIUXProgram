@@ -48,13 +48,11 @@ public class VirtualPlayer : MonoBehaviour
     // 플랜 리스트
     private List<Plan> planList = new List<Plan>();
     private List<UserMove> userMoveList = new List<UserMove>();
-    private ChessBoardManager chessBoardManager; // 체스 보드 매니저
 
     private int userMoveIndex = 0; // 유저의 움직임 횟수
 
     private void Start()
     {
-        chessBoardManager = GameObject.FindAnyObjectByType<ChessBoardManager>();
         ActionManager.whenPlayerMoved += DoAction; // 액션 구독
     }
 
@@ -75,7 +73,7 @@ public class VirtualPlayer : MonoBehaviour
         curruntPlan = planList[0];
 
         // 플랜에 있는 대로 기물을 움직인다
-        targetPiece = chessBoardManager.pieces[curruntPlan.originX, curruntPlan.originY];
+        targetPiece = ChessBoardManager.instance.pieces[curruntPlan.originX, curruntPlan.originY];
         if( targetPiece == null )
         {
             Debug.Log("null: " + curruntPlan.originX + "," + curruntPlan.originY);
@@ -83,11 +81,11 @@ public class VirtualPlayer : MonoBehaviour
         targetPiece.MoveTo(curruntPlan.targetX, curruntPlan.targetY);
 
         // 목표 지점에 이미 말이 있는 경우 잡는다.
-        ChessPiece enemyPiece = chessBoardManager.pieces[curruntPlan.targetX, curruntPlan.targetY];
-        if( enemyPiece != null ) chessBoardManager.pieces[enemyPiece.x, enemyPiece.y] = null;
+        ChessPiece enemyPiece = ChessBoardManager.instance.pieces[curruntPlan.targetX, curruntPlan.targetY];
+        if( enemyPiece != null ) ChessBoardManager.instance.pieces[enemyPiece.x, enemyPiece.y].gameObject.SetActive(false); // 적 기물 제거
 
-        chessBoardManager.pieces[curruntPlan.originX, curruntPlan.originY] = null; // 기존 위치에 있던 기물 제거
-        chessBoardManager.pieces[curruntPlan.targetX, curruntPlan.targetY] = targetPiece; // 새로운 위치로 기물 이동        
+        ChessBoardManager.instance.pieces[curruntPlan.originX, curruntPlan.originY] = null; // 기존 위치에 있던 기물 제거
+        ChessBoardManager.instance.pieces[curruntPlan.targetX, curruntPlan.targetY] = targetPiece; // 새로운 위치로 기물 이동        
 
         planList.RemoveAt(0); // 이미 뽑힌 플랜은 폐기
     }
@@ -120,6 +118,7 @@ public class VirtualPlayer : MonoBehaviour
     public void PlanInit(int stage)
     {
         planList.Clear();
+        userMoveList.Clear();
         userMoveIndex = 0; // 유저 이동 인덱스 초기화
 
         if ( stage == 1 )
@@ -163,9 +162,14 @@ public class VirtualPlayer : MonoBehaviour
 
         if( stage == 6 )
         {
-            planList.Add(new Plan(4, 2, 1, 2));
-            planList.Add(new Plan(3, 1, 3, 0)); // 폰 프로모션
-            planList.Add(new Plan(3, 0, 3, 7)); // 퀸으로 프로모션한 폰이 이동
+            planList.Add(new Plan(6, 6, 6, 7));
+            planList.Add(new Plan(6, 7, 7, 7));
+            planList.Add(new Plan(7, 7, 6, 7));
+
+            userMoveList.Add(new UserMove(5, 3, 4, 5));
+            userMoveList.Add(new UserMove(7, 2, 7, 7));
+            userMoveList.Add(new UserMove(3, 1, 7, 5));
+            userMoveList.Add(new UserMove(7, 5, 6, 5));
         }
     }
 
