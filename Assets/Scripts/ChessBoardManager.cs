@@ -30,6 +30,7 @@ public class ChessBoardManager : MonoBehaviour
     public ChessPiece[,] pieces = new ChessPiece[8, 8]; // 체스말 위치 저장
     private VirtualPlayer virtualPlayer;
     private bool isPlayerWhite; // 플레이어가 백색인 경우 true
+    public int playerMoveCount = 0; // 플레이어가 움직인 횟수
 
     public void SetChessBoard(int stage)
     {
@@ -95,6 +96,7 @@ public class ChessBoardManager : MonoBehaviour
             {
                 OnStageFailed(); // 유저의 움직임이 잘못되었을 경우 게임 오버
             }
+            else ActionManager.whenPlayerMoved(); // 플레이어의 행동이 정답이면 AI의 행동을 실행한다.
         }
     }
 
@@ -121,7 +123,7 @@ public class ChessBoardManager : MonoBehaviour
             selectedPiece.MoveTo(x, y); // 기물 이동
             pieces[x, y] = selectedPiece; // 목표 위치에 기물 배치
 
-            ActionManager.whenPlayerMoved(); // 플레이어가 행동을 마쳤으니 액션 호출
+            playerMoveCount++; // 플레이어가 움직인 횟수 증가
         }
 
         // 선택 해제
@@ -356,7 +358,8 @@ public class ChessBoardManager : MonoBehaviour
 
     private void SetGame(int stage)
     {
-        if( stage == 1 )
+        playerMoveCount = 0;
+        if ( stage == 1 )
         {
             SpawnPiece(blackPieces[4], 0, 0, PieceType.Queen, false);
             SpawnPiece(blackPieces[1], 6, 1, PieceType.Rook, false);
@@ -511,6 +514,7 @@ public class ChessBoardManager : MonoBehaviour
 
     public void OnStageFailed()
     {
+        VirtualPlayer.instance.userMoveIndex = 0; // 유저 이동 인덱스 초기화
         GameManager.instance.OnGameFailed(); // 게임매니저에 게임 오버 알림
         foreach (var tile in tiles)
         {

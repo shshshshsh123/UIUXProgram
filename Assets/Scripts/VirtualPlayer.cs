@@ -49,7 +49,7 @@ public class VirtualPlayer : MonoBehaviour
     private List<Plan> planList = new List<Plan>();
     private List<UserMove> userMoveList = new List<UserMove>();
 
-    private int userMoveIndex = 0; // 유저의 움직임 횟수
+    public int userMoveIndex = 0; // 유저의 움직임 횟수
 
     private void Start()
     {
@@ -59,18 +59,18 @@ public class VirtualPlayer : MonoBehaviour
     // 기물을 움직인다.
     public void DoAction()
     {
-        if (planList.Count == 0)
+        if (userMoveIndex > planList.Count)
         {
-            // plan이 비어있으면 클리어했다는 뜻
-            Debug.Log("플랜이 비어있음. 게임 클리어!");
+            // 클리어
+            Debug.Log("게임 클리어!");
             ChessBoardManager.instance.OnStageClear();
         }
 
         ChessPiece targetPiece; // 움직일 기물
         Plan curruntPlan; // 현재 턴의 플랜
 
-        // 플랜 리스트에서 첫번째 플랜을 뽑는다.
-        curruntPlan = planList[0];
+        // 플랜 리스트에서 플랜 가져오기
+        curruntPlan = planList[userMoveIndex - 1];
 
         // 플랜에 있는 대로 기물을 움직인다
         targetPiece = ChessBoardManager.instance.pieces[curruntPlan.originX, curruntPlan.originY];
@@ -86,7 +86,6 @@ public class VirtualPlayer : MonoBehaviour
 
         ChessBoardManager.instance.pieces[curruntPlan.originX, curruntPlan.originY] = null; // 기존 위치에 있던 기물 제거
         ChessBoardManager.instance.pieces[curruntPlan.targetX, curruntPlan.targetY] = targetPiece; // 새로운 위치로 기물 이동        
-
     }
 
     public bool CheckUserMove(Vector2Int start, Vector2Int end)
@@ -105,8 +104,6 @@ public class VirtualPlayer : MonoBehaviour
 
         UserMove correctMove = userMoveList[userMoveIndex];
 
-        planList.RemoveAt(0); // 이미 뽑힌 플랜은 폐기
-
         if (correctMove.originX == start.x && correctMove.originY == start.y
             && correctMove.targetX == end.x && correctMove.targetY == end.y)
         {
@@ -119,6 +116,7 @@ public class VirtualPlayer : MonoBehaviour
             Debug.Log("오답! 정답은: " + start + " -> " + end);
             return false;
         }
+
     }
 
     // 이곳에서 플랜 리스트 생성 (하드코딩)
