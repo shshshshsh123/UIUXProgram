@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
         {
             "상대 킹의 숨을 막을 방법을 고민해보세요!",
             "다른기물보다 폰을 먼저 움직여보세요!",
-            "(6, 4) 폰을 이용하여 체크를 걸어보세요!"
+            "(7, 5) 폰을 이용하여 체크를 걸어보세요!"
         },
         new List<string>
         {

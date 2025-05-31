@@ -193,7 +193,7 @@ public class VirtualPlayer : MonoBehaviour
             userMoveList.Add(new UserMove(5, 3, 4, 5));
             userMoveList.Add(new UserMove(7, 2, 7, 7));
             userMoveList.Add(new UserMove(3, 1, 7, 5));
-            userMoveList.Add(new UserMove(7, 5, 6, 5));
+            userMoveList.Add(new UserMove(7, 5, 6, 6));
         }
     }
 
