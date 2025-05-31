@@ -164,7 +164,7 @@ public class VirtualPlayer : MonoBehaviour
 
         if( stage == 4 )
         {
-            planList.Add(new Plan(6, 6, 6, 5));
+            planList.Add(new Plan(5, 6, 6, 5));
             planList.Add(new Plan(7, 6, 7, 7));
             planList.Add(new Plan(1, 2, 1, 7));
 

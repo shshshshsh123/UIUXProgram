@@ -425,7 +425,7 @@ public class ChessBoardManager : MonoBehaviour
             SpawnPiece(whitePieces[0], 7, 4, PieceType.Pawn, true);
             SpawnPiece(blackPieces[5], 1, 5, PieceType.King, false);
             SpawnPiece(blackPieces[0], 3, 5, PieceType.Pawn, false);
-            SpawnPiece(whitePieces[4], 6, 5, PieceType.King, true);
+            SpawnPiece(whitePieces[4], 6, 5, PieceType.Queen, true);
             SpawnPiece(blackPieces[0], 0, 6, PieceType.Pawn, false);
             SpawnPiece(blackPieces[0], 1, 6, PieceType.Pawn, false);
         }
