@@ -29,7 +29,7 @@ public class ChessBoardManager : MonoBehaviour
     public ChessPiece selectedPiece;
     public ChessPiece[,] pieces = new ChessPiece[8, 8]; // 체스말 위치 저장
     private VirtualPlayer virtualPlayer;
-    private bool isPlayerWhite; // 플레이어가 백색인 경우 true
+    public bool isPlayerWhite; // 플레이어가 백색인 경우 true
     public int playerMoveCount = 0; // 플레이어가 움직인 횟수
 
     public void SetChessBoard(int stage)
